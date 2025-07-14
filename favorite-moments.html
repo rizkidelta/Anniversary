@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Favorite Moments</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .back-to-celebration {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            display: inline-block;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 80px 20px 40px;
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 40px;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+
+        .image-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-image {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 15px;
+            object-fit: cover;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            border: 3px solid white;
+        }
+
+        .floating-image.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .floating-image.hide {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(2deg);
+            }
+        }
+
+        .floating-image.animate {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .instructions {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+            margin-top: 50px;
+        }
+
+        .instructions h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .instructions p {
+            color: #666;
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2.2rem;
+            }
+            
+            .floating-image {
+                width: 160px;
+                height: 160px;
+            }
+            
+            .instructions {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="back-to-celebration">
+        <a href="celebration.html" class="back-button">← Back</a>
+    </div>
+
+    <div class="image-container" id="imageContainer">
+        <!-- Images will be dynamically added here -->
+    </div>
+    
+    <div class="container">
+        <!-- Only back button, no text -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageContainer = document.getElementById('imageContainer');
+            const imageFolder = 'Pic/'; // Folder path
+            
+            // Array of your actual image filenames
+            const imageFiles = [
+                '0CF433BC-2F95-4C2B-AF8C-D96F874AB8DF.JPG',
+                '2511F0D5-817E-4B85-8A7B-A2AA29883FA1.JPG',
+                '701AD175-0F37-48CF-B694-6DE4F9B072B0.JPG',
+                'B120FCC4-6BD4-490D-94FE-8A4E39FF9DF3.JPG',
+                'B68FA979-7B07-449C-B88C-5CAD83C95553.JPG',
+                'CE1AB728-B9D4-488A-8C40-6496A228B555.JPG',
+                'D438083F-DED7-4C4E-9FCB-36C7B1CD21DD.JPG',
+                'F13CC466-8632-425E-95DC-13D07AA18222.JPG',
+                'IMG_0001.JPG',
+                'IMG_0125.JPG',
+                'IMG_2797.JPG',
+                'IMG_2821.JPG',
+                'IMG_3913.JPG',
+                'IMG_7026.JPG',
+                'IMG_7613.JPG',
+                // Including some HEIC files (may not work in all browsers)
+                'IMG_2753.HEIC',
+                'IMG_2773.HEIC',
+                'IMG_3548.HEIC',
+                'IMG_3745.HEIC',
+                'IMG_3748.HEIC',
+                'IMG_3802.HEIC',
+                'IMG_3876.HEIC',
+                'IMG_3934.HEIC',
+                'IMG_4010.HEIC',
+                'IMG_4012.HEIC',
+                'IMG_4063.HEIC',
+                'IMG_4066.HEIC',
+                'IMG_4069.HEIC',
+                'IMG_4101.HEIC',
+                'IMG_4110.HEIC',
+                'IMG_4166.HEIC',
+                'IMG_4198.HEIC',
+                'IMG_4246.HEIC',
+                'IMG_4289.HEIC',
+                'IMG_4927.HEIC',
+                'IMG_4989.HEIC',
+                'IMG_5029.HEIC',
+                'IMG_6212.HEIC',
+                'IMG_6240.HEIC',
+                'IMG_6248.HEIC',
+                'IMG_6262.HEIC',
+                'IMG_6373.heic',
+                'IMG_6378.HEIC',
+                'IMG_6380.HEIC',
+                'IMG_6437.HEIC',
+                'IMG_6470.HEIC',
+                'IMG_6507.HEIC',
+                'IMG_6528.HEIC',
+                'IMG_6732.HEIC',
+                'IMG_6996.HEIC',
+                'IMG_6999.HEIC',
+                'IMG_7413.HEIC',
+                'IMG_7485.HEIC',
+                'IMG_7492.HEIC',
+                'IMG_7506.HEIC',
+                'IMG_7516.HEIC',
+                'IMG_7528.HEIC',
+                'IMG_8252.HEIC',
+                'IMG_8387.HEIC',
+                'IMG_8820.HEIC',
+                'IMG_8886.HEIC',
+                'IMG_9089.HEIC'
+            ];
+
+            let activeImages = [];
+            const maxImages = 10; // Maximum number of images shown at once
+
+            function createFloatingImage() {
+                const img = document.createElement('img');
+                const randomImage = imageFiles[Math.floor(Math.random() * imageFiles.length)];
+                img.src = imageFolder + randomImage;
+                img.className = 'floating-image';
+                
+                // Random position
+                const randomX = Math.random() * (window.innerWidth - 200);
+                const randomY = Math.random() * (window.innerHeight - 200);
+                img.style.left = randomX + 'px';
+                img.style.top = randomY + 'px';
+
+                // Add error handling for missing images
+                img.onerror = function() {
+                    console.log('Image failed to load: ' + this.src);
+                    this.remove();
+                    activeImages = activeImages.filter(image => image !== img);
+                    // Try to create another image to replace the failed one
+                    setTimeout(createFloatingImage, 100);
+                };
+
+                img.onload = function() {
+                    // Show the image
+                    setTimeout(() => {
+                        img.classList.add('show');
+                        img.classList.add('animate');
+                    }, 100);
+
+                    // Hide the image after some time
+                    setTimeout(() => {
+                        img.classList.remove('show');
+                        img.classList.add('hide');
+                        
+                        setTimeout(() => {
+                            img.remove();
+                            activeImages = activeImages.filter(image => image !== img);
+                        }, 500);
+                    }, 3000 + Math.random() * 2000); // Stay visible for 3-5 seconds
+                };
+
+                imageContainer.appendChild(img);
+                activeImages.push(img);
+            }
+
+            // Continuous image creation
+            function continuousImageShow() {
+                createFloatingImage();
+                
+                // Schedule next image at a slower pace
+                setTimeout(continuousImageShow, 800 + Math.random() * 400); // 0.8-1.2 seconds
+            }
+
+            // Start multiple streams immediately
+            for (let i = 0; i < 5; i++) {
+                setTimeout(continuousImageShow, i * 100);
+            }
+
+            // Also create images on interval to ensure continuity
+            setInterval(function() {
+                if (activeImages.length < maxImages) {
+                    createFloatingImage();
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
